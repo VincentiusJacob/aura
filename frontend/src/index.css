@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Fraunces", serif;
+  --font-sans: "Instrument Sans", sans-serif;
+
+  --color-aura-ivory: #F9F8F6;
+  --color-aura-slate: #2D2D2D;
+  --color-aura-gold: #D4AF37;
+  --color-aura-gold-muted: #E5D5A5;
+  --color-aura-accent: #E8E4DF;
+
+  --radius-aura: 1.5rem;
+}
+
+@layer base {
+  :root {
+    background-color: var(--color-aura-ivory);
+    color: var(--color-aura-slate);
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/40 backdrop-blur-md border border-white/20 shadow-sm rounded-aura;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 bg-aura-slate text-aura-ivory rounded-full hover:bg-aura-gold transition-all duration-300 font-medium;
+  }
+
+  .input-aura {
+    @apply w-full px-4 py-3 bg-white/50 border border-aura-accent rounded-aura focus:outline-none focus:border-aura-gold transition-all;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-aura-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
