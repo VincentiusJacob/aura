@@ -16,13 +16,26 @@ CORS(app)
 # In production, use GOOGLE_APPLICATION_CREDENTIALS env var or a service account JSON
 try:
     if not firebase_admin._apps:
-        # Check for service account path in env
-        cred_path = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
-        if cred_path and os.path.exists(cred_path):
-            cred = credentials.Certificate(cred_path)
-            firebase_admin.initialize_app(cred)
+        cred_data = os.getenv('FIREBASE_SERVICE_ACCOUNT_JSON')
+        if cred_data:
+            if os.path.exists(cred_data):
+                # It's a file path (Local)
+                cred = credentials.Certificate(cred_data)
+            else:
+                # It's a raw JSON string (Production/Vercel)
+                try:
+                    import json
+                    cred_dict = json.loads(cred_data)
+                    cred = credentials.Certificate(cred_dict)
+                except Exception as e:
+                    print(f"Error parsing Firebase JSON: {e}")
+                    cred = None
+            
+            if cred:
+                firebase_admin.initialize_app(cred)
+            else:
+                firebase_admin.initialize_app()
         else:
-            # Fallback for local development if creds are not provided yet
             firebase_admin.initialize_app()
     db = firestore.client()
 except Exception as e:
